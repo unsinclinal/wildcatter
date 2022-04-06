@@ -6,9 +6,9 @@ authors = ["Altay Sansal <tasansal@users.noreply.github.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
-gym = "^0.23.1"
-pygame = "^2.1.2"
+python = "^3.8"
+gym = {version = "^0.23.1", extras = ["nomujoco"]}
+pygame = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 
