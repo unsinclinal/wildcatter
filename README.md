@@ -10,8 +10,7 @@ cd path/to/wildcatter
 pip install .
 ```
 
-If you have Poetry:
-(Installation instructions [here](https://python-poetry.org/docs/master/#installation))
+If you have Poetry (Installation instructions [here](https://python-poetry.org/docs/master/#installation)):
 
 ```shell
 cd path/to/wildcatter
