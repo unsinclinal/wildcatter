@@ -7,11 +7,11 @@ import random
 class SimpleDriller(Env):
     def __init__(self, env_config):
         # 2d presentative matrix
-        self.model = np.loadtxt(env_config['model_path'], delimiter=env_config['delim'])
+        self.model = np.loadtxt(env_config["model_path"], delimiter=env_config["delim"])
         # discretizing space
         self.nrow, self.ncol = self.model.shape
         # Available pipe
-        self.available_pipe = env_config['available_pipe']
+        self.available_pipe = env_config["available_pipe"]
 
         # Initial production capacity
         self.production = 0
@@ -20,7 +20,9 @@ class SimpleDriller(Env):
         self.action_space = Discrete(4)
 
         # Space our agent can interact with
-        self.observation_space = Box(low=0, high=1, shape=(self.nrow, self.ncol), dtype='bool')
+        self.observation_space = Box(
+            low=0, high=1, shape=(self.nrow, self.ncol), dtype="bool"
+        )
         self.reset()
 
     def step(self, action):
