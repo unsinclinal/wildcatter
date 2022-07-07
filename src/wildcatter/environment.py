@@ -1,13 +1,24 @@
+"""Driller environment module."""
+
+
+import random
+
 import numpy as np
 from gym import Env
-from gym.spaces import Discrete, Box
-import random
+from gym.spaces import Box
+from gym.spaces import Discrete
 
 
 class SimpleDriller(Env):
+    """Simple driller environment."""
+
     def __init__(self, env_config):
+        """Initialize environment with config dictionary."""
         # 2d presentative matrix
-        self.model = np.loadtxt(env_config["model_path"], delimiter=env_config["delim"])
+        self.model = np.loadtxt(
+            env_config["model_path"],
+            delimiter=env_config["delim"],
+        )
         # discretizing space
         self.nrow, self.ncol = self.model.shape
         # Available pipe
@@ -25,7 +36,8 @@ class SimpleDriller(Env):
         )
         self.reset()
 
-    def step(self, action):
+    def step(self, action):  # noqa: C901
+        """Take step based on action."""
         actions = {
             0: [1, 0],  # down
             1: [0, -1],  # left
@@ -50,7 +62,7 @@ class SimpleDriller(Env):
                 available_actions.remove(2)
 
             if action not in available_actions:
-                action = random.choice(available_actions)
+                action = random.choice(available_actions)  # noqa: S311
 
             available_actions.remove(action)
             change = actions[action]
@@ -60,13 +72,13 @@ class SimpleDriller(Env):
                 collision = True
                 while collision:
                     try:
-                        new_action = random.choice(available_actions)
+                        new_action = random.choice(available_actions)  # noqa: S311
                     except IndexError:
                         stuck = True
                         break
 
                     try:
-                        available_actions.remove(new_action)
+                        available_actions.remove(new_action)  # noqa: S311
                     except ValueError:
                         stuck = True
                         break
@@ -113,17 +125,20 @@ class SimpleDriller(Env):
         return self.state, reward, done, info
 
     def update_state(self):
+        """Update state method."""
         traj_i, traj_j = np.asarray(self.trajectory).T
         self.state[traj_i, traj_j] = 1
 
     def render(self):
+        """Gym environment rendering."""
         # Implement viz
-        raise NotImplemented("No renderer implemented yet.")
+        raise NotImplementedError("No renderer implemented yet.")
         pass
 
     def reset(self):
+        """Reset the status of the environment."""
         # Reset SHL
-        self.surface_hole_location = [1, random.randint(0, self.ncol - 1)]
+        self.surface_hole_location = [1, random.randint(0, self.ncol - 1)]  # noqa: S311
         self.state = np.zeros((self.nrow, self.ncol), dtype=bool)
         self.bit_location = self.surface_hole_location
         # Reset Trajectory
