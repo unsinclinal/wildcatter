@@ -2,8 +2,7 @@
 import pytest
 from click.testing import CliRunner
 
-from src.wildcatter import __main__
-
+from wildcatter import __main__
 
 @pytest.fixture
 def runner() -> CliRunner:

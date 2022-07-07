@@ -1,18 +1,25 @@
 """Driller environment module."""
 
 
+from __future__ import annotations
+
 import random
+from typing import Any
 
 import numpy as np
 from gym import Env
 from gym.spaces import Box
 from gym.spaces import Discrete
+from numpy.typing import NDArray
 
 
-class SimpleDriller(Env):
+GymStepType = tuple[NDArray[np.bool_], int, bool, dict[str, Any]]
+
+
+class SimpleDriller(Env):  # type: ignore
     """Simple driller environment."""
 
-    def __init__(self, env_config):
+    def __init__(self, env_config: dict[str, Any]) -> None:
         """Initialize environment with config dictionary."""
         # 2d presentative matrix
         self.model = np.loadtxt(
@@ -26,6 +33,9 @@ class SimpleDriller(Env):
 
         # Initial production capacity
         self.production = 0
+        self.pipe_used = 0
+        self.trajectory: list[list[int]] = []
+        self.bit_location: list[int] = []
 
         # Actions we can take
         self.action_space = Discrete(4)
@@ -36,7 +46,7 @@ class SimpleDriller(Env):
         )
         self.reset()
 
-    def step(self, action):  # noqa: C901
+    def step(self, action: int) -> GymStepType:  # noqa: C901
         """Take step based on action."""
         actions = {
             0: [1, 0],  # down
@@ -45,7 +55,8 @@ class SimpleDriller(Env):
             3: [-1, 0],  # up
         }
 
-        def take_action(loc, action):
+        def take_action(loc: list[int], action: int) -> tuple[list[int], bool]:
+            """Convenience function for taking action."""
             available_actions = list(actions.keys())
             stuck = False
 
@@ -119,23 +130,23 @@ class SimpleDriller(Env):
                 done = True
 
         # Set placeholder for info
-        info = {}
+        info: dict[str, Any] = {}
 
         # Return step information
         return self.state, reward, done, info
 
-    def update_state(self):
+    def update_state(self) -> None:
         """Update state method."""
         traj_i, traj_j = np.asarray(self.trajectory).T
         self.state[traj_i, traj_j] = 1
 
-    def render(self):
+    def render(self) -> None:
         """Gym environment rendering."""
         # Implement viz
         raise NotImplementedError("No renderer implemented yet.")
         pass
 
-    def reset(self):
+    def reset(self) -> NDArray[np.bool_]:
         """Reset the status of the environment."""
         # Reset SHL
         self.surface_hole_location = [1, random.randint(0, self.ncol - 1)]  # noqa: S311
