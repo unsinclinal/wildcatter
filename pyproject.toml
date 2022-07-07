@@ -1,17 +1,26 @@
 [tool.poetry]
 name = "wildcatter"
-version = "0.1.0"
-description = "Reinforcement learning framework for well placement and optimization"
+version = "0.0.1"
+description = "Wildcatter"
 authors = ["Altay Sansal <tasansal@users.noreply.github.com>"]
-license = "MIT"
+license = "Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/GeoML-SIG/wildcatter"
+repository = "https://github.com/GeoML-SIG/wildcatter"
+documentation = "https://wildcatter.readthedocs.io"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+]
 
+[tool.poetry.urls]
+Changelog = "https://github.com/tasansal/wildcatter/releases"
 
 [tool.poetry.dependencies]
-python = ">=3.9 <3.11"
-gym = "~=0.21"
+python = ">=3.8 <3.11"
+gym = "^0.21"
 pygame = "^2.1.2"
 ray = {version = "^1.13.0", extras = ["rllib"]}
-torch = "^1.11.0"
+torch = "^1.12.0"
 
 [tool.poetry.group.notebook]
 optional = true
@@ -28,7 +37,8 @@ pygbag = "^0.0.9"
 
 
 [tool.poetry.group.dev.dependencies]
-black = {version = "^22.3.0", extras = ["jupyter"]}
+black = {version = "^22.6.0", extras = ["jupyter"]}
+isort = "^5.10.1"
 
 [tool.poetry.dev-dependencies]
 
