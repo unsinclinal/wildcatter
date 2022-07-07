@@ -35,7 +35,6 @@ optional = true
 [tool.poetry.group.serve.dependencies]
 pygbag = "^0.0.9"
 
-
 [tool.poetry.group.dev.dependencies]
 black = {version = "^22.6.0", extras = ["jupyter"]}
 isort = "^5.10.1"
