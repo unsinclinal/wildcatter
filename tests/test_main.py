@@ -4,6 +4,7 @@ from click.testing import CliRunner
 
 from wildcatter import __main__
 
+
 @pytest.fixture
 def runner() -> CliRunner:
     """Fixture for invoking command-line interfaces."""
