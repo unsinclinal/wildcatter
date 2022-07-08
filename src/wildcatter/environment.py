@@ -13,40 +13,34 @@ from gym.spaces import Discrete
 from numpy.typing import NDArray
 
 
-GymStepType = tuple[NDArray[np.bool_], int, bool, dict[str, Any]]
-
-
 class SimpleDriller(Env):  # type: ignore
     """Simple driller environment."""
 
     def __init__(self, env_config: dict[str, Any]) -> None:
         """Initialize environment with config dictionary."""
-        # 2d presentative matrix
         self.model = np.loadtxt(
             env_config["model_path"],
             delimiter=env_config["delim"],
         )
-        # discretizing space
+
         self.nrow, self.ncol = self.model.shape
-        # Available pipe
         self.available_pipe = env_config["available_pipe"]
 
-        # Initial production capacity
         self.production = 0
         self.pipe_used = 0
         self.trajectory: list[list[int]] = []
         self.bit_location: list[int] = []
 
-        # Actions we can take
         self.action_space = Discrete(4)
 
-        # Space our agent can interact with
         self.observation_space = Box(
             low=0, high=1, shape=(self.nrow, self.ncol), dtype="bool"
         )
         self.reset()
 
-    def step(self, action: int) -> GymStepType:  # noqa: C901
+    def step(  # noqa: C901
+        self, action: int
+    ) -> tuple[NDArray[np.bool_], int, bool, dict[str, Any]]:
         """Take step based on action."""
         actions = {
             0: [1, 0],  # down
@@ -112,27 +106,20 @@ class SimpleDriller(Env):  # type: ignore
         else:
             self.bit_location = new_location
 
-            # adding and saving updated trajectory
             self.trajectory.append(new_location)
             newrow, newcol = new_location
 
-            # reward calculcation
             reward = self.model[newrow, newcol]
 
-            # new state
             self.update_state()
 
-            # Reduce pipe inventory
             self.pipe_used += 1
 
-            # Check if pipe has run out
             if self.pipe_used == self.available_pipe:
                 done = True
 
-        # Set placeholder for info
         info: dict[str, Any] = {}
 
-        # Return step information
         return self.state, reward, done, info
 
     def update_state(self) -> None:
@@ -142,18 +129,13 @@ class SimpleDriller(Env):  # type: ignore
 
     def render(self) -> None:
         """Gym environment rendering."""
-        # Implement viz
         raise NotImplementedError("No renderer implemented yet.")
-        pass
 
     def reset(self) -> NDArray[np.bool_]:
         """Reset the status of the environment."""
-        # Reset SHL
         self.surface_hole_location = [1, random.randint(0, self.ncol - 1)]  # noqa: S311
         self.state = np.zeros((self.nrow, self.ncol), dtype=bool)
         self.bit_location = self.surface_hole_location
-        # Reset Trajectory
         self.trajectory = [self.surface_hole_location]
-        # Reset pipe
         self.pipe_used = 0
         return self.state
