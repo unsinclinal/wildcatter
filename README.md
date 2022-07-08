@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/pypi/l/wildcatter)][license]
 
 [![Read the documentation at https://wildcatter.readthedocs.io/](https://img.shields.io/readthedocs/wildcatter/latest.svg?label=Read%20the%20Docs)][read the docs]
-[![Tests](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/workflows/Tests/badge.svg)][tests]
+[![Tests](https://github.com/GeoML-SIG/wildcatter/workflows/Tests/badge.svg)][tests]
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
