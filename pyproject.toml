@@ -72,6 +72,7 @@ tests = ["tests", "*/tests"]
 [tool.coverage.run]
 branch = true
 source = ["wildcatter", "tests"]
+omit = ["*/environment.py"]
 
 [tool.coverage.report]
 show_missing = true
