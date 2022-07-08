@@ -6,13 +6,17 @@
 [![License](https://img.shields.io/pypi/l/wildcatter)][license]
 
 [![Read the documentation at https://wildcatter.readthedocs.io/](https://img.shields.io/readthedocs/wildcatter/latest.svg?label=Read%20the%20Docs)][read the docs]
+[![Tests](https://github.com/{{cookiecutter.github_user}}/{{cookiecutter.project_name}}/workflows/Tests/badge.svg)][tests]
 
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
 
 [pypi_]: https://pypi.org/project/wildcatter/
 [status]: https://pypi.org/project/wildcatter/
 [python version]: https://pypi.org/project/wildcatter
 [read the docs]: https://wildcatter.readthedocs.io/
+[tests]: https://github.com/GeoML-SIG/wildcatter/actions?workflow=Tests
+[pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
 
 Reinforcement learning framework for well placement and optimization
