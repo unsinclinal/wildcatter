@@ -8,6 +8,9 @@ readme = "README.md"
 homepage = "https://github.com/GeoML-SIG/wildcatter"
 repository = "https://github.com/GeoML-SIG/wildcatter"
 documentation = "https://wildcatter.readthedocs.io"
+packages = [
+    { include = "wildcatter", from = "src" },
+]
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
 ]
@@ -99,5 +102,5 @@ module = [
 ignore_missing_imports = true
 
 [build-system]
-requires = ["poetry-core>=1.1.0b2"]
+requires = ["poetry-core>=1.1.0b3"]
 build-backend = "poetry.core.masonry.api"
