@@ -1,9 +1,14 @@
+# This is the environment configuration
+# to be used in AWS SageMaker Studio Lab
+# You can right-click install this from
+# JupyterLab inside AWS SMS Lab.
 # To use:
-#   $ conda env create -f env_cv.yml
-#   $ conda activate cv
+#   $ conda env create -f environment.yml
+#   $ conda activate wildcatter
 name: wildcatter
 dependencies:
   - python=3.9
   - pip
   - pip:
-    - wildcatter
+    - -r requirements.txt
+    - -e .
