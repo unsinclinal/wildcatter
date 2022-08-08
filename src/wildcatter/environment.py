@@ -42,6 +42,7 @@ class SimpleDriller(Env):  # type: ignore
         self, action: int
     ) -> tuple[NDArray[np.bool_], int, bool, dict[str, Any]]:
         """Take step based on action."""
+        done = False
         actions = {
             0: [1, 0],  # down
             1: [0, -1],  # left
@@ -49,74 +50,35 @@ class SimpleDriller(Env):  # type: ignore
             3: [-1, 0],  # up
         }
 
-        def take_action(loc: list[int], action: int) -> tuple[list[int], bool]:
-            """Convenience function for taking action."""
-            available_actions = list(actions.keys())
-            stuck = False
+        dz_dx = actions[action]
+        new_location = [prev + now for prev, now in zip(self.bit_location, dz_dx)]
 
-            if loc[0] <= 1:
-                available_actions.remove(3)
+        self.bit_location = new_location
 
-            if loc[0] == (self.nrow - 1):
-                available_actions.remove(0)
+        self.trajectory.append(new_location)
+        newrow, newcol = new_location
 
-            if loc[1] == 0:
-                available_actions.remove(1)
+        self.pipe_used += 1
 
-            if loc[1] == (self.ncol - 1):
-                available_actions.remove(2)
+        if newrow < 1 or newrow >= self.nrow:
+            done = True
+            reward = -100
 
-            if action not in available_actions:
-                action = random.choice(available_actions)  # noqa: S311
+        elif newcol < 0 or newcol >= self.ncol:
+            done = True
+            reward = -100
 
-            available_actions.remove(action)
-            change = actions[action]
-            new_location = [old + new for old, new in zip(loc, change)]
+        else:
+            reward = self.model[newrow, newcol] + self.pipe_used / 2
+            self.update_state()
 
-            if new_location in self.trajectory:
-                collision = True
-                while collision:
-                    try:
-                        new_action = random.choice(available_actions)  # noqa: S311
-                    except IndexError:
-                        stuck = True
-                        break
-
-                    try:
-                        available_actions.remove(new_action)  # noqa: S311
-                    except ValueError:
-                        stuck = True
-                        break
-
-                    change = actions[new_action]
-                    new_location = [old + new for old, new in zip(loc, change)]
-
-                    if new_location not in self.trajectory:
-                        collision = False
-
-            return new_location, stuck
-
-        new_location, stuck = take_action(self.bit_location, action)
-
-        done = False
-        if stuck:
+        if self.pipe_used == self.available_pipe:
             done = True
             reward = 0
 
-        else:
-            self.bit_location = new_location
-
-            self.trajectory.append(new_location)
-            newrow, newcol = new_location
-
-            reward = self.model[newrow, newcol]
-
-            self.update_state()
-
-            self.pipe_used += 1
-
-            if self.pipe_used == self.available_pipe:
-                done = True
+        if self.bit_location in self.trajectory[:-1]:
+            done = True
+            reward = -100
 
         info: dict[str, Any] = {}
 
