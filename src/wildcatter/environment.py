@@ -101,3 +101,63 @@ class SimpleDriller(Env):  # type: ignore
         self.trajectory = [self.surface_hole_location]
         self.pipe_used = 0
         return self.state
+
+"""otherclass"""  
+class MultiDriller(Env):
+    
+    def __init__(self, env_config: dict[str, Any], nwells) -> None:
+        """Initialize environment with config dictionary."""
+        self.env_config = env_config 
+        self.model = np.loadtxt(
+            env_config["model_path"],
+            delimiter=env_config["delim"],
+        )
+
+        self.nrow, self.ncol = self.model.shape
+        self.nwells = nwells
+        self.wells = self.createWells()
+        self.reset()
+        
+    def createWells(self) -> list[SimpleDriller]:
+        if self.nwells <= 1:
+            raise ValueError('The number of wells should be more than 1')
+        else:
+            wells: list[SimpleDriller] = []
+            for n in range(0, self.nwells):
+                wells.append(SimpleDriller(self.env_config))
+            return wells
+        
+    def getState(self, well: int) -> NDArray[np.bool_]:
+        return self.wells[well].state
+    
+    def getTrajectory(self, well: int) -> list[list[int]]:
+        return self.wells[well].trajectory
+    
+    def reset(self) -> None:
+        for well in self.wells:
+            well.reset()
+    
+    def step(self) -> NPArray[np.intc]:
+        done = False
+        w = 0
+        score = np.zeros(self.nwells)
+        for well in self.wells:
+            done = False
+            while not done:
+                action = well.action_space.sample()
+                state, reward, done, info = well.step(action)
+                score[w] += reward
+            w+=1
+        return score
+    
+    def step(self, action: int) -> NPArray[np.intc]:
+        done = False
+        w = 0
+        score = np.zeros(self.nwells)
+        for well in self.wells:
+            done = False
+            while not done:
+                state, reward, done, info = well.step(action)
+                score[w] += reward
+            w+=1
+        return score
